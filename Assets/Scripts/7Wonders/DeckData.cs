@@ -24,6 +24,103 @@ public class DeckData : ScriptableObject
         }
     }
 
+    CardData.OptionResource ParseProduction(string productionDescriptor)
+    {
+        CardData.OptionResource production = new CardData.OptionResource();
+        production.content = new List<ResourceType>();
+        for (int c = 0; c < productionDescriptor.Length; ++c)
+        {
+            if (productionDescriptor[c] == ' ')
+            {
+                continue;
+            }
+            else if (productionDescriptor[c] == 'W')
+            {
+                production.content.Add(ResourceType.Wood);
+            }
+            else if (productionDescriptor[c] == 'S')
+            {
+                production.content.Add(ResourceType.Stone);
+            }
+            else if (productionDescriptor[c] == 'S')
+            {
+                production.content.Add(ResourceType.Stone);
+            }
+            else if (productionDescriptor[c] == 'C')
+            {
+                production.content.Add(ResourceType.Clay);
+            }
+            else if (productionDescriptor[c] == 'O')
+            {
+                production.content.Add(ResourceType.Ore);
+            }
+            else if (productionDescriptor[c] == 'G')
+            {
+                production.content.Add(ResourceType.Glass);
+            }
+            else if (productionDescriptor[c] == 'L')
+            {
+                production.content.Add(ResourceType.Textile);
+            }
+            else if (productionDescriptor[c] == '&')
+            {
+                production.content.Add(ResourceType.ScienceCompas);
+            }
+            else if (productionDescriptor[c] == '@')
+            {
+                production.content.Add(ResourceType.ScienceGear);
+            }
+            else if (productionDescriptor[c] == '#')
+            {
+                production.content.Add(ResourceType.ScienceStone);
+            }
+            else if (productionDescriptor[c] == 'P')
+            {
+                production.content.Add(ResourceType.Paper);
+            }
+            else if (productionDescriptor[c] == 'X')
+            {
+                production.content.Add(ResourceType.MilitaryShield);
+            }
+            else if (productionDescriptor[c] == '{')
+            {
+                try
+                {
+                    int points = int.Parse(productionDescriptor[c + 1].ToString());
+                    for (int m = 0; m < points; ++m)
+                    {
+                        production.content.Add(ResourceType.Point);
+                    }
+                    c += 2;
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("  Bad resource at '" + productionDescriptor + "'[" + c + "]" + productionDescriptor[c] + productionDescriptor[c + 1] + productionDescriptor[c + 2]);
+                    production = null;
+                    break;
+                }
+            }
+            else
+            {
+                try
+                {
+                    int money = int.Parse(productionDescriptor[c].ToString());
+                    for (int m = 0; m < money; ++m)
+                    {
+                        production.content.Add(ResourceType.Money);
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError("  Bad resource" + productionDescriptor[c]);
+                    production.content.Clear();
+                    production = null;
+                    break;
+                }
+            }
+        }
+        return production;
+    }
     void ParseFile()
     {
         cards = new List<CardData>();
@@ -215,97 +312,27 @@ public class DeckData : ScriptableObject
                     string productionDescriptor = cardData[5];
                     if (productionDescriptor.Contains("/"))
                     {
-                        Debug.LogWarning("Choose");
+                        string[] options = productionDescriptor.Split('/');
+                        try
+                        {
+                            card.production = new CardData.OptionResource[options.Length];
+                            for(int p = 0; p < options.Length; ++p)
+                            {
+                                var production = ParseProduction(options[p]);
+                                card.production[p] = production;
+                            }
+                            
+                        }
+                        catch(System.Exception e)
+                        {
+                            Debug.LogError("Bad options " + productionDescriptor);
+                            card.production = new CardData.OptionResource[0];
+                        }
                     }
                     else
                     {
-                        CardData.OptionResource production = new CardData.OptionResource();
-                        production.content = new List<ResourceType>();
-                        for (int c = 0; c < productionDescriptor.Length; ++c)
-                        {
-                            if (productionDescriptor[c] == 'W')
-                            {
-                                production.content.Add(ResourceType.Wood);
-                            }
-                            else if (productionDescriptor[c] == 'S')
-                            {
-                                production.content.Add(ResourceType.Stone);
-                            }
-                            else if (productionDescriptor[c] == 'S')
-                            {
-                                production.content.Add(ResourceType.Stone);
-                            }
-                            else if (productionDescriptor[c] == 'C')
-                            {
-                                production.content.Add(ResourceType.Clay);
-                            }
-                            else if (productionDescriptor[c] == 'O')
-                            {
-                                production.content.Add(ResourceType.Ore);
-                            }
-                            else if (productionDescriptor[c] == 'G')
-                            {
-                                production.content.Add(ResourceType.Glass);
-                            }
-                            else if (productionDescriptor[c] == 'L')
-                            {
-                                production.content.Add(ResourceType.Textile);
-                            }
-                            else if (productionDescriptor[c] == '&')
-                            {
-                                production.content.Add(ResourceType.ScienceCompas);
-                            }
-                            else if (productionDescriptor[c] == '@')
-                            {
-                                production.content.Add(ResourceType.ScienceGear);
-                            }
-                            else if(productionDescriptor[c] == '#')
-                            {
-                                production.content.Add(ResourceType.ScienceStone);
-                            }
-                            else if(productionDescriptor[c] == 'P')
-                            {
-                                production.content.Add(ResourceType.Paper);
-                            }
-                            else if(productionDescriptor[c] == '{')
-                            {
-                                try
-                                {
-                                    ++c;
-                                    int points = int.Parse(costDescriptor[c].ToString());
-                                    for (int m = 0; m < points; ++m)
-                                    {
-                                        production.content.Add(ResourceType.Point);
-                                    }
-                                    ++c;
-                                }
-                                catch (System.Exception e)
-                                {
-                                    Debug.LogError("Bad resource" + productionDescriptor[c]);
-                                    production.content.Clear();
-                                    break;
-                                }
-                            }
-                            else 
-                            {
-                                try
-                                {
-                                    int money = int.Parse(costDescriptor[c].ToString());
-                                    for (int m = 0; m < money; ++m)
-                                    {
-                                        production.content.Add(ResourceType.Money);
-                                    }
-                                }
-                                catch (System.Exception e)
-                                {
-                                    Debug.LogError("Bad resource" + productionDescriptor[c]);
-                                    production.content.Clear();
-                                    break;
-                                }
-                            }
-                        }
                         card.production = new CardData.OptionResource[1];
-                        card.production[0] = production;
+                        card.production[0] = ParseProduction(productionDescriptor);
                     }
 
                 }

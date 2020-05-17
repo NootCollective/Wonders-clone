@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ResourceType
 {
-    Wood, Stone, Ore, Clay, Glass, Paper, Textile, Money, Point, ScienceCompas, ScienceStone, ScienceGear
+    Wood, Stone, Ore, Clay, Glass, Paper, Textile, Money, Point, ScienceCompas, ScienceStone, ScienceGear, MilitaryShield
 }
 
 public class Resource : ScriptableObject
