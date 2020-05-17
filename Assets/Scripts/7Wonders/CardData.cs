@@ -35,6 +35,8 @@ public class CardData : ScriptableObject
     new Color(148f/255,0,211f/255,1)
    };
 
+
+
     public int ID;
     new public string name;
     public string description;
