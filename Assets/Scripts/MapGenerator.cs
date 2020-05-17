@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -12,6 +11,7 @@ public class MapGenerator : MonoBehaviour
     public Tilemap tilemap;
     public TileBase backGroundTile;
     public bool generateOnValidate = true;
+    public bool generateOnStart = true;
     public bool backgroundFill = false;
 
     [Header("Resources tile lists")]
@@ -29,6 +29,8 @@ public class MapGenerator : MonoBehaviour
     public int cityRadius = 10;
     public float waysDisplacementNoise = 10f;
     public int waysDecimation = 4;
+    public AnimationCurve forestProbability;
+    public float forestThreshold = 0.2f;
 
     private void OnValidate()
     {
@@ -47,19 +49,27 @@ public class MapGenerator : MonoBehaviour
             GenerateMap();
         }
     }
+    private void Start()
+    {
+        if(generateOnStart)
+            GenerateMap();
+    }
 
     private void GenerateMap()
     {
         // background
         if (backgroundFill && backGroundTile)
         {
+            List<TileBase> tiles = new List<TileBase>();
             foreach (Vector3Int p in mapSize.allPositionsWithin)
             {
-                tilemap.SetTile(p, backGroundTile);
+                //tilemap.SetTile(p, backGroundTile);
+                tiles.Add(backGroundTile);
             }
+            tilemap.SetTilesBlock(mapSize, tiles.ToArray());
         }
 
-        // standart city placement
+        // forest
         Vector3Int[] citiesCenters = new Vector3Int[6];
         tilemap.SetTile(new Vector3Int(0, 0, 0), waterTile);
         for (int i = 0; i < citiesCenters.Length; i++) 
@@ -73,26 +83,20 @@ public class MapGenerator : MonoBehaviour
             foreach (Vector3Int cell in cityBound.allPositionsWithin)
             {
                 Vector3 p2 = new Vector3(cell.x, cell.y, cell.z);
-                if (Vector3.Distance(p1, p2) < cityRadius)
+                float r = Vector3.Distance(p1, p2);
+
+                if (r < cityRadius && RandomForest(r / cityRadius) > forestThreshold)
                 {
                     tilemap.SetTile(cell, forestTile);
+                }
+                else if (r < cityRadius)
+                {
+                    tilemap.SetTile(cell, backGroundTile);
                 }
             }
             tilemap.SetTile(citiesCenters[i], waterTile);
         }
-
-        // ways
-        for(int i=0; i< citiesCenters.Length; i++)
-        {
-            Vector3Int start = citiesCenters[i];
-            Vector3Int end = citiesCenters[(i + 1)% citiesCenters.Length];
-            List<Vector3Int> path = GetNoisyPath(start, end, waysDecimation, waysDisplacementNoise);
-            foreach(Vector3Int p2 in path)
-            {
-                tilemap.SetTile(p2, roadTile);
-            }
-        }
-
+        
         // rivers
         for (int i = 0; i < citiesCenters.Length; i++)
         {
@@ -105,25 +109,37 @@ public class MapGenerator : MonoBehaviour
             }
 
             float angle = 60 * i * Mathf.Deg2Rad;
-            Vector3 p1 = new Vector3(3 * citiesDistances * Mathf.Cos(angle), 3 * citiesDistances * Mathf.Sin(angle), 0);
+            Vector3 p1 = new Vector3(2 * citiesDistances * Mathf.Cos(angle), 2 * citiesDistances * Mathf.Sin(angle), 0);
             List<Vector3Int> path2 = GetNoisyPath(start, new Vector3Int((int)p1.x, (int)p1.y, (int)p1.z), waysDecimation, waysDisplacementNoise);
             foreach (Vector3Int p2 in path2)
             {
                 tilemap.SetTile(p2, waterTile);
             }
         }
+        
+        // roads
+        for(int i=0; i< citiesCenters.Length; i++)
+        {
+            Vector3Int start = citiesCenters[i];
+            Vector3Int end = citiesCenters[(i + 1)% citiesCenters.Length];
+            List<Vector3Int> path = GetNoisyPath(start, end, waysDecimation, waysDisplacementNoise);
+            foreach(Vector3Int p2 in path)
+            {
+                tilemap.SetTile(p2, roadTile);
+            }
+        }
     }
 
     private List<Vector3Int> GetNoisyPath(Vector3Int start, Vector3Int end, int segmentCount, float displacement = 1f)
     {
-        segmentCount = Math.Max(segmentCount, 1);
+        segmentCount = Mathf.Max(segmentCount, 1);
         Vector3Int[] segments = new Vector3Int[segmentCount + 1];
         segments[0] = start;
         segments[segmentCount] = end;
         Vector3 normalDirection = new Vector3(end.y - start.y, start.x - end.x, 0).normalized;
         for (int i = 1; i < segments.Length-1; i++)
         {
-            Vector3 dp = UnityEngine.Random.Range(0f, displacement) * normalDirection;
+            Vector3 dp = Random.Range(-displacement, displacement) * normalDirection;
             segments[i] = LerpCell(start, end, (float)i / segmentCount) + new Vector3Int((int)dp.x, (int)dp.y, (int)dp.z);
         }
         
@@ -205,5 +221,9 @@ public class MapGenerator : MonoBehaviour
     {
         Vector3 v = Vector3.Lerp(start, end, t);
         return new Vector3Int((int)v.x, (int)v.y, (int)v.z);
+    }
+    public float RandomForest(float t)
+    {
+        return Random.Range(0f, forestProbability.Evaluate(t));
     }
 }
