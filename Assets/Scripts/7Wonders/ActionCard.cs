@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class ActionCard : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public CardData data;
 
-    // Update is called once per frame
-    void Update()
+    public bool CanPlay(Player player)
     {
-        
+        return false;
+    }
+    public bool Play(Player player)
+    {
+        return false;
     }
 }
