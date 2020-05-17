@@ -16,8 +16,14 @@ public enum CardType
 [CreateAssetMenu(fileName = "CardData", menuName = "Data/Card", order = 2)]
 public class CardData : ScriptableObject
 {
+  
+    public class Option<T>{
+        [SerializeField]
+        public List<T> content;
+    };
     [System.Serializable]
-    public class Option<T>: List<T> { }
+    public class OptionResource : Option<ResourceType> { };
+
     public static Color[] CardColor = new Color[7]
    {
     Color.red,
@@ -42,7 +48,7 @@ public class CardData : ScriptableObject
     public CardData[] chainProvides;
 
     [Header("Value")]
-    public Option<ResourceType>[] production;
+    public OptionResource[] production;
     public int points;
     //public CardActionData[] instantEffect;
 

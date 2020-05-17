@@ -9,7 +9,9 @@ public class DeckData : ScriptableObject
     public bool import;
 
     public List<CardData> cards;
-
+    public List<CardData> age1;
+    public List<CardData> age2;
+    public List<CardData> age3;
     private char lineSeperater = '\n'; // It defines line seperate character
     private char fieldSeperator = ','; // It defines field seperate chracter
 
@@ -25,6 +27,9 @@ public class DeckData : ScriptableObject
     void ParseFile()
     {
         cards = new List<CardData>();
+        age1 = new List<CardData>();
+        age2 = new List<CardData>();
+        age3 = new List<CardData>();
         Dictionary<string, CardData> index = new Dictionary<string, CardData>();
         Dictionary<string, string> data = new Dictionary<string, string>();
         // if (file)
@@ -41,7 +46,7 @@ public class DeckData : ScriptableObject
                     bool valid = int.TryParse(cardData[0], out asset.age);
                     if (valid)
                     {
-                        UnityEditor.AssetDatabase.CreateAsset(asset, "Assets\\Data\\Cards\\" + asset.age+"."+asset.name + ".asset");
+                        UnityEditor.AssetDatabase.CreateAsset(asset, "Assets\\Data\\Cards\\" + asset.age + "." + asset.name + ".asset");
 
                         index[asset.name] = asset;
                         data[asset.name] = lines[l];
@@ -60,6 +65,7 @@ public class DeckData : ScriptableObject
                 CardData card = index[cardname];
 
                 card.ID = id++;
+                #region type
                 if (cardData[1] == "brown")
                 {
                     card.type = CardType.MaterialRaw;
@@ -92,7 +98,66 @@ public class DeckData : ScriptableObject
                 {
                     Debug.LogError("unknown card type " + cardData[1]);
                 }
-
+                #endregion
+                #region cost
+                string costDescriptor = cardData[3];
+                if (costDescriptor.Length > 0)
+                {
+                    List<ResourceType> cost = new List<ResourceType>();
+                    for (int c = 0; c < costDescriptor.Length; ++c)
+                    {
+                        if (costDescriptor[c] == 'W')
+                        {
+                            cost.Add(ResourceType.Wood);
+                        }
+                        else if (costDescriptor[c] == 'S')
+                        {
+                            cost.Add(ResourceType.Stone);
+                        }
+                        else if (costDescriptor[c] == 'S')
+                        {
+                            cost.Add(ResourceType.Stone);
+                        }
+                        else if (costDescriptor[c] == 'C')
+                        {
+                            cost.Add(ResourceType.Clay);
+                        }
+                        else if (costDescriptor[c] == 'O')
+                        {
+                            cost.Add(ResourceType.Ore);
+                        }
+                        else if (costDescriptor[c] == 'G')
+                        {
+                            cost.Add(ResourceType.Glass);
+                        }
+                        else if (costDescriptor[c] == 'L')
+                        {
+                            cost.Add(ResourceType.Textile);
+                        }
+                        else if (costDescriptor[c] == 'P')
+                        {
+                            cost.Add(ResourceType.Paper);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                int money = int.Parse(costDescriptor[c].ToString());
+                                for (int m = 0; m < money; ++m)
+                                {
+                                    cost.Add(ResourceType.Money);
+                                }
+                            }
+                            catch (System.Exception e)
+                            {
+                                Debug.LogError("Bad resource" + costDescriptor[c]);
+                            }
+                        }
+                    }
+                    card.cost = cost.ToArray();
+                }
+                #endregion
+                #region chain
                 if (cardData[2].Length > 0)
                 {
                     try
@@ -106,60 +171,6 @@ public class DeckData : ScriptableObject
 
                 }
 
-                if (cardData[3].Length > 0)
-                {
-                    List<ResourceType> cost = new List<ResourceType>();
-                    for(int c = 0; c < cardData[3].Length; ++c)
-                    {
-                        if(cardData[3][c] == 'W')
-                        {
-                            cost.Add(ResourceType.Wood);
-                        }else if (cardData[3][c] == 'S')
-                        {
-                            cost.Add(ResourceType.Stone);
-                        }
-                        else if (cardData[3][c] == 'S')
-                        {
-                            cost.Add(ResourceType.Stone);
-                        }
-                        else if (cardData[3][c] == 'C')
-                        {
-                            cost.Add(ResourceType.Clay);
-                        }
-                        else if (cardData[3][c] == 'O')
-                        {
-                            cost.Add(ResourceType.Ore);
-                        }
-                        else if (cardData[3][c] == 'G')
-                        {
-                            cost.Add(ResourceType.Glass);
-                        }
-                        else if (cardData[3][c] == 'L')
-                        {
-                            cost.Add(ResourceType.Textile);
-                        }
-                        else if (cardData[3][c] == 'P')
-                        {
-                            cost.Add(ResourceType.Paper);
-                        }
-                        else
-                        {
-                            try
-                            {
-                                int money = int.Parse(cardData[3][c].ToString());
-                                for(int m = 0;m < money; ++m)
-                                {
-                                    cost.Add(ResourceType.Money);
-                                }
-                            }
-                            catch(System.Exception e)
-                            {
-                                Debug.LogError("Bad resource" + cardData[3][c]);
-                            }
-                        }
-                    }
-                    card.cost = cost.ToArray();
-                }
                 if (cardData[6].Length > 0)
                 {
 
@@ -197,10 +208,125 @@ public class DeckData : ScriptableObject
                         }
                     }
                 }
+                #endregion
+                #region production
+                if (cardData[5].Length > 0)
+                {
+                    string productionDescriptor = cardData[5];
+                    if (productionDescriptor.Contains("/"))
+                    {
+                        Debug.LogWarning("Choose");
+                    }
+                    else
+                    {
+                        CardData.OptionResource production = new CardData.OptionResource();
+                        production.content = new List<ResourceType>();
+                        for (int c = 0; c < productionDescriptor.Length; ++c)
+                        {
+                            if (productionDescriptor[c] == 'W')
+                            {
+                                production.content.Add(ResourceType.Wood);
+                            }
+                            else if (productionDescriptor[c] == 'S')
+                            {
+                                production.content.Add(ResourceType.Stone);
+                            }
+                            else if (productionDescriptor[c] == 'S')
+                            {
+                                production.content.Add(ResourceType.Stone);
+                            }
+                            else if (productionDescriptor[c] == 'C')
+                            {
+                                production.content.Add(ResourceType.Clay);
+                            }
+                            else if (productionDescriptor[c] == 'O')
+                            {
+                                production.content.Add(ResourceType.Ore);
+                            }
+                            else if (productionDescriptor[c] == 'G')
+                            {
+                                production.content.Add(ResourceType.Glass);
+                            }
+                            else if (productionDescriptor[c] == 'L')
+                            {
+                                production.content.Add(ResourceType.Textile);
+                            }
+                            else if (productionDescriptor[c] == '&')
+                            {
+                                production.content.Add(ResourceType.ScienceCompas);
+                            }
+                            else if (productionDescriptor[c] == '@')
+                            {
+                                production.content.Add(ResourceType.ScienceGear);
+                            }
+                            else if(productionDescriptor[c] == '#')
+                            {
+                                production.content.Add(ResourceType.ScienceStone);
+                            }
+                            else if(productionDescriptor[c] == 'P')
+                            {
+                                production.content.Add(ResourceType.Paper);
+                            }
+                            else if(productionDescriptor[c] == '{')
+                            {
+                                try
+                                {
+                                    ++c;
+                                    int points = int.Parse(costDescriptor[c].ToString());
+                                    for (int m = 0; m < points; ++m)
+                                    {
+                                        production.content.Add(ResourceType.Point);
+                                    }
+                                    ++c;
+                                }
+                                catch (System.Exception e)
+                                {
+                                    Debug.LogError("Bad resource" + productionDescriptor[c]);
+                                    production.content.Clear();
+                                    break;
+                                }
+                            }
+                            else 
+                            {
+                                try
+                                {
+                                    int money = int.Parse(costDescriptor[c].ToString());
+                                    for (int m = 0; m < money; ++m)
+                                    {
+                                        production.content.Add(ResourceType.Money);
+                                    }
+                                }
+                                catch (System.Exception e)
+                                {
+                                    Debug.LogError("Bad resource" + productionDescriptor[c]);
+                                    production.content.Clear();
+                                    break;
+                                }
+                            }
+                        }
+                        card.production = new CardData.OptionResource[1];
+                        card.production[0] = production;
+                    }
+
+                }
+                #endregion
+
                 card.Verify();
 
                 cards.Add(card);
 
+                switch (card.age)
+                {
+                    case 1:
+                        age1.Add(card);
+                        break;
+                    case 2:
+                        age2.Add(card);
+                        break;
+                    case 3:
+                        age3.Add(card);
+                        break;
+                }
             }
         }
     }

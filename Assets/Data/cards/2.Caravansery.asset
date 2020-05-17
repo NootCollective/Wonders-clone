@@ -21,4 +21,5 @@ MonoBehaviour:
   cost: 
   chainRequirement: {fileID: 0}
   chainProvides: []
+  production: []
   points: 0
