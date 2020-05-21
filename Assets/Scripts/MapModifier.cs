@@ -10,6 +10,7 @@ public class MapModifier : MonoBehaviour
     public MapGenerator mapGen;
 
     public List<Vector3Int>[] citiesSlots;
+    public List<Vector3Int>[] resourcesSlots;
 
     private void OnValidate()
     {
@@ -40,6 +41,11 @@ public class MapModifier : MonoBehaviour
                     if (Random.Range(0f, 1f) < building.ring1Probability)
                     {
                         tilemap.SetTile(t, building.ring1Tile);
+                        if(Random.Range(0, 2) != 0)
+                        {
+                            Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 180f, 0f), Vector3.one);
+                            tilemap.SetTransformMatrix(t, matrix);
+                        }
                     }
                 }
             }
@@ -60,22 +66,26 @@ public class MapModifier : MonoBehaviour
 
 
 
-    public BuildingTile test;
+    public BuildingTile cityDebugTile;
+    public BuildingTile resourceDebugTile;
     private void Start()
     {
         mapGen.GenerateMap();
-
-        Debug.Log(mapGen.citiesCenters.Length);
+        
         citiesSlots = new List<Vector3Int>[mapGen.citiesCenters.Length];
+        resourcesSlots = new List<Vector3Int>[mapGen.citiesCenters.Length];
         for (int i = 0; i < mapGen.citiesCenters.Length; i++)
         {
             citiesSlots[i] = GetCitySlots(mapGen.citiesCenters[i]);
+            resourcesSlots[i] = GetResourcesSlots(mapGen.citiesCenters[i]);
         }
 
         for (int i = 0; i < 6; i++)
         {
             foreach(Vector3Int v in citiesSlots[i])
-                PlaceBuilding(test, v);
+                PlaceBuilding(cityDebugTile, v);
+            foreach (Vector3Int v in resourcesSlots[i])
+                PlaceBuilding(resourceDebugTile, v);
         }
     }
 
@@ -83,7 +93,7 @@ public class MapModifier : MonoBehaviour
     public List<Vector3Int> GetCitySlots(Vector3Int cityCenter)
     {
         List<Vector3Int> slots = new List<Vector3Int>();
-
+        
         if (cityCenter.y % 2 == 0)
         {
             slots.Add(new Vector3Int(cityCenter.x + 2, cityCenter.y - 1, cityCenter.z));
@@ -92,6 +102,20 @@ public class MapModifier : MonoBehaviour
             slots.Add(new Vector3Int(cityCenter.x - 1, cityCenter.y + 3, cityCenter.z));
             slots.Add(new Vector3Int(cityCenter.x - 2, cityCenter.y - 2, cityCenter.z));
             slots.Add(new Vector3Int(cityCenter.x + 2, cityCenter.y + 2, cityCenter.z));
+
+            slots.Add(new Vector3Int(cityCenter.x + 5, cityCenter.y - 2, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 5, cityCenter.y + 2, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 1, cityCenter.y - 6, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 1, cityCenter.y + 6, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 4, cityCenter.y - 4, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 4, cityCenter.y + 4, cityCenter.z));
+
+            slots.Add(new Vector3Int(cityCenter.x + 4, cityCenter.y + 1, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 5, cityCenter.y - 1, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 1, cityCenter.y + 5, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 2, cityCenter.y - 5, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 3, cityCenter.y + 4, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 3, cityCenter.y - 4, cityCenter.z));
         }
         else
         {
@@ -101,8 +125,36 @@ public class MapModifier : MonoBehaviour
             slots.Add(new Vector3Int(cityCenter.x - 2, cityCenter.y + 1, cityCenter.z));
             slots.Add(new Vector3Int(cityCenter.x - 2, cityCenter.y - 2, cityCenter.z));
             slots.Add(new Vector3Int(cityCenter.x + 2, cityCenter.y + 2, cityCenter.z));
+
+            slots.Add(new Vector3Int(cityCenter.x + 1, cityCenter.y - 6, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 1, cityCenter.y + 6, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 5, cityCenter.y - 2, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 5, cityCenter.y + 2, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 4, cityCenter.y - 4, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 4, cityCenter.y + 4, cityCenter.z));
+
+            slots.Add(new Vector3Int(cityCenter.x + 2, cityCenter.y + 5, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 1, cityCenter.y - 5, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 3, cityCenter.y + 4, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 3, cityCenter.y - 4, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x + 5, cityCenter.y + 1, cityCenter.z));
+            slots.Add(new Vector3Int(cityCenter.x - 4, cityCenter.y - 1, cityCenter.z));
         }
 
         return slots;
+    }
+
+    public List<Vector3Int> GetResourcesSlots(Vector3Int cityCenter)
+    {
+        List<Vector3Int> resources = new List<Vector3Int>();
+
+        resources.Add(new Vector3Int(cityCenter.x-6, cityCenter.y+12, cityCenter.z));
+        resources.Add(new Vector3Int(cityCenter.x+6, cityCenter.y+12, cityCenter.z));
+        resources.Add(new Vector3Int(cityCenter.x-6, cityCenter.y-12, cityCenter.z));
+        resources.Add(new Vector3Int(cityCenter.x+6, cityCenter.y-12, cityCenter.z));
+        resources.Add(new Vector3Int(cityCenter.x-14, cityCenter.y, cityCenter.z));
+        resources.Add(new Vector3Int(cityCenter.x+14, cityCenter.y, cityCenter.z));
+
+        return resources;
     }
 }
