@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -33,7 +34,7 @@ public class MapGenerator : MonoBehaviour
     public AnimationCurve forestProbability;
     public float forestThreshold = 0.2f;
     public float riverDeadendsProbability = 0.5f;
-    public Vector3Int[] citiesCenters;
+    public Vector3Int[] citiesCenters = new Vector3Int[6];
 
 
     [Header("Debug")]
@@ -77,7 +78,7 @@ public class MapGenerator : MonoBehaviour
         }
 
         // cities centers
-        citiesCenters = new Vector3Int[6];
+        //citiesCenters = new Vector3Int[6];
         int generatedCities = citiesCenters.Length;
         tilemap.SetTile(new Vector3Int(0, 0, 0), waterTile);
         for (int i = 0; i < citiesCenters.Length; i++)
@@ -94,12 +95,17 @@ public class MapGenerator : MonoBehaviour
 
             foreach (Vector3Int cell in cityBound.allPositionsWithin)
             {
-                Vector3 p2 = new Vector3(cell.x, cell.y, cell.z);
+                Vector3 p2 = tilemap.CellToWorld(cell);
                 float r = Vector3.Distance(citiesCenters[i], p2);
 
                 if (r < cityRadius && RandomForest(r / cityRadius) > forestThreshold)
                 {
                     tilemap.SetTile(cell, forestTile);
+                    if (Random.Range(0, 2) != 0)
+                    {
+                        Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 180f, 0f), Vector3.one);
+                        tilemap.SetTransformMatrix(cell, matrix);
+                    }
                 }
                 else if (r < cityRadius)
                 {
@@ -154,6 +160,23 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < generatedCities; i++)
         {
             tilemap.SetTile(citiesCenters[i], debugTile1);
+        }
+    }
+
+    private void OnDrawGizmos2()
+    {
+        int r = 20;
+        Handles.color = Color.blue;
+        for (int i = 0; i < 6; i++)
+        {
+            BoundsInt cityBound = new BoundsInt(citiesCenters[i] - new Vector3Int(r, r, 0), new Vector3Int(2 * r, 2 * r, 1));
+
+            foreach (Vector3Int cell in cityBound.allPositionsWithin)
+            {
+                Vector3 p2 = tilemap.GetCellCenterWorld(cell);
+                GUIStyle stl = new GUIStyle() { alignment = TextAnchor.MiddleCenter };
+                Handles.Label(p2, (cell - citiesCenters[i]).ToString(), stl);
+            }
         }
     }
 
