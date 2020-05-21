@@ -28,9 +28,16 @@ public class MapGenerator : MonoBehaviour
     public int citiesDistances = 50;
     public int cityRadius = 10;
     public float waysDisplacementNoise = 10f;
+    public AnimationCurve waysDisplacementAmplitude;
     public int waysDecimation = 4;
     public AnimationCurve forestProbability;
     public float forestThreshold = 0.2f;
+    public float riverDeadendsProbability = 0.5f;
+    public Vector3Int[] citiesCenters;
+
+
+    [Header("Debug")]
+    public TileBase debugTile1;
 
     private void OnValidate()
     {
@@ -55,7 +62,7 @@ public class MapGenerator : MonoBehaviour
             GenerateMap();
     }
 
-    private void GenerateMap()
+    public void GenerateMap()
     {
         // background
         if (backgroundFill && backGroundTile)
@@ -69,21 +76,26 @@ public class MapGenerator : MonoBehaviour
             tilemap.SetTilesBlock(mapSize, tiles.ToArray());
         }
 
-        // forest
-        Vector3Int[] citiesCenters = new Vector3Int[6];
+        // cities centers
+        citiesCenters = new Vector3Int[6];
+        int generatedCities = citiesCenters.Length;
         tilemap.SetTile(new Vector3Int(0, 0, 0), waterTile);
-        for (int i = 0; i < citiesCenters.Length; i++) 
+        for (int i = 0; i < citiesCenters.Length; i++)
         {
             float angle = 60 * i * Mathf.Deg2Rad;
             Vector3 p1 = new Vector3(citiesDistances * Mathf.Cos(angle), citiesDistances * Mathf.Sin(angle), 0);
             citiesCenters[i] = new Vector3Int((int)p1.x, (int)p1.y, (int)p1.z);
-            
+        }
+
+        // forest
+        for (int i = 0; i < generatedCities; i++) 
+        {
             BoundsInt cityBound = new BoundsInt(citiesCenters[i] - new Vector3Int(cityRadius, cityRadius, 0), new Vector3Int(2 * cityRadius, 2 * cityRadius, 1));
 
             foreach (Vector3Int cell in cityBound.allPositionsWithin)
             {
                 Vector3 p2 = new Vector3(cell.x, cell.y, cell.z);
-                float r = Vector3.Distance(p1, p2);
+                float r = Vector3.Distance(citiesCenters[i], p2);
 
                 if (r < cityRadius && RandomForest(r / cityRadius) > forestThreshold)
                 {
@@ -98,10 +110,10 @@ public class MapGenerator : MonoBehaviour
         }
         
         // rivers
-        for (int i = 0; i < citiesCenters.Length; i++)
+        for (int i = 0; i < generatedCities; i++)
         {
             Vector3Int start = citiesCenters[i];
-            List<Vector3Int> path = GetNoisyPath(start, new Vector3Int(0, 0, 0), waysDecimation, waysDisplacementNoise);
+            List<Vector3Int> path = GetNoisyPath(start, new Vector3Int(0, 0, 0), waysDecimation, waysDisplacementNoise, true, riverDeadendsProbability);
             foreach (Vector3Int p2 in path)
             {
 
@@ -110,7 +122,7 @@ public class MapGenerator : MonoBehaviour
 
             float angle = 60 * i * Mathf.Deg2Rad;
             Vector3 p1 = new Vector3(2 * citiesDistances * Mathf.Cos(angle), 2 * citiesDistances * Mathf.Sin(angle), 0);
-            List<Vector3Int> path2 = GetNoisyPath(start, new Vector3Int((int)p1.x, (int)p1.y, (int)p1.z), waysDecimation, waysDisplacementNoise);
+            List<Vector3Int> path2 = GetNoisyPath(start, new Vector3Int((int)p1.x, (int)p1.y, (int)p1.z), waysDecimation, waysDisplacementNoise, true, riverDeadendsProbability);
             foreach (Vector3Int p2 in path2)
             {
                 tilemap.SetTile(p2, waterTile);
@@ -118,7 +130,7 @@ public class MapGenerator : MonoBehaviour
         }
         
         // roads
-        for(int i=0; i< citiesCenters.Length; i++)
+        for(int i=0; i< generatedCities; i++)
         {
             Vector3Int start = citiesCenters[i];
             Vector3Int end = citiesCenters[(i + 1)% citiesCenters.Length];
@@ -128,9 +140,24 @@ public class MapGenerator : MonoBehaviour
                 tilemap.SetTile(p2, roadTile);
             }
         }
+        if(generatedCities != citiesCenters.Length)
+        {
+            Vector3Int start = citiesCenters[0];
+            Vector3Int end = citiesCenters[citiesCenters.Length - 1];
+            List<Vector3Int> path = GetNoisyPath(start, end, waysDecimation, waysDisplacementNoise);
+            foreach (Vector3Int p2 in path)
+            {
+                tilemap.SetTile(p2, roadTile);
+            }
+        }
+        
+        for (int i = 0; i < generatedCities; i++)
+        {
+            tilemap.SetTile(citiesCenters[i], debugTile1);
+        }
     }
 
-    private List<Vector3Int> GetNoisyPath(Vector3Int start, Vector3Int end, int segmentCount, float displacement = 1f)
+    private List<Vector3Int> GetNoisyPath(Vector3Int start, Vector3Int end, int segmentCount, float displacement = 1f, bool deadEnds = false, float deadendProbability = 0.5f)
     {
         segmentCount = Mathf.Max(segmentCount, 1);
         Vector3Int[] segments = new Vector3Int[segmentCount + 1];
@@ -139,7 +166,8 @@ public class MapGenerator : MonoBehaviour
         Vector3 normalDirection = new Vector3(end.y - start.y, start.x - end.x, 0).normalized;
         for (int i = 1; i < segments.Length-1; i++)
         {
-            Vector3 dp = Random.Range(-displacement, displacement) * normalDirection;
+            float d = displacement * waysDisplacementAmplitude.Evaluate((float)i / (segments.Length-1));
+            Vector3 dp = Random.Range(-d, d) * normalDirection;
             segments[i] = LerpCell(start, end, (float)i / segmentCount) + new Vector3Int((int)dp.x, (int)dp.y, (int)dp.z);
         }
         
@@ -147,6 +175,12 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0; i < segments.Length-1; i++) 
         {
             path.AddRange(GetSegmentPath(segments[i], segments[(i + 1) % segments.Length]));
+            if(deadEnds && (i != 0 && i != segments.Length - 1) && Random.Range(0, 1f) > deadendProbability)
+            {
+                Vector3 dp2 = new Vector3(Random.Range(-displacement, displacement), Random.Range(-displacement, displacement), 0);
+                Vector3 dp = (Random.Range(0, 2)!=0 ? -2f : 2f) * displacement * normalDirection + dp2;
+                path.AddRange(GetNoisyPath(segments[i], segments[i] + new Vector3Int((int)dp.x, (int)dp.y, (int)dp.z), 2));
+            }
         }
 
         return path;
@@ -160,7 +194,7 @@ public class MapGenerator : MonoBehaviour
         {
             path.Add(cell);
             Vector3 direction = new Vector3(end.x - cell.x, end.y - cell.y, end.z - cell.z);
-            cell = NeighborInDirection(cell, direction);
+            cell = NeighborInDirection(cell, direction.normalized);
 
             // security
             stopIteration--;
@@ -169,49 +203,22 @@ public class MapGenerator : MonoBehaviour
                 break;
             }
         }
-        path.Add(end);
         return path;
-    }
-    private Vector3Int GetNeighbor(Vector3Int cell, int n)
-    {
-        if (cell.y % 2 == 0)
-        {
-            switch (n)
-            {
-                case 0: return new Vector3Int(cell.x - 1, cell.y + 1, cell.z);
-                case 1: return new Vector3Int(cell.x - 1, cell.y, cell.z);
-                case 2: return new Vector3Int(cell.x - 1, cell.y - 1, cell.z);
-                case 3: return new Vector3Int(cell.x, cell.y - 1, cell.z);
-                case 4: return new Vector3Int(cell.x + 1, cell.y, cell.z);
-                case 5: return new Vector3Int(cell.x, cell.y + 1, cell.z);
-            }
-        }
-        else
-        {
-            switch (n)
-            {
-                case 0: return new Vector3Int(cell.x, cell.y + 1, cell.z);
-                case 1: return new Vector3Int(cell.x - 1, cell.y, cell.z);
-                case 2: return new Vector3Int(cell.x, cell.y - 1, cell.z);
-                case 3: return new Vector3Int(cell.x + 1, cell.y - 1, cell.z);
-                case 4: return new Vector3Int(cell.x + 1, cell.y, cell.z);
-                case 5: return new Vector3Int(cell.x + 1, cell.y + 1, cell.z);
-            }
-        }
-        return cell;
     }
     private Vector3Int NeighborInDirection(Vector3Int cell, Vector3 direction)
     {
         float maxd = float.MinValue;
         Vector3Int winner = new Vector3Int();
+        Vector3 c = tilemap.CellToWorld(cell);
         for (int i=0; i<6; i++)
         {
-            Vector3Int n = GetNeighbor(cell, i);
-            float d = Vector3.Dot(direction, new Vector3(n.x - cell.x, n.y - cell.y, n.z - cell.z));
+            Vector3Int nint = HexagonalTile.GetNeighbor(cell, i);
+            Vector3 n = tilemap.CellToWorld(HexagonalTile.GetNeighbor(cell, i));
+            float d = Vector3.Dot(direction, n - c);
 
             if (d > maxd)
             {
-                winner = n;
+                winner = nint;
                 maxd = d;
             }
         }
@@ -226,4 +233,5 @@ public class MapGenerator : MonoBehaviour
     {
         return Random.Range(0f, forestProbability.Evaluate(t));
     }
+
 }
