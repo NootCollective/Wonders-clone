@@ -26,5 +26,7 @@ MonoBehaviour:
   - content: 
     contentAsList:
       content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  instantEffect: []
+  instantEffect:
+  - {fileID: 11400000, guid: e8be127e0c8ef154dab68338a3cdc74a, type: 2}
+  - {fileID: 11400000, guid: 931a0180ce5be1142b7309570cd25603, type: 2}
   buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

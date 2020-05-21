@@ -23,14 +23,18 @@ public class City : CardLocation
 
     private void Start()
     {
-        cityID = MapModifier.Instance.GetCityID();
-        for(int i=0; i< MapModifier.Instance.citiesSlots[cityID].Count; i++)
+        if (MapModifier.Instance != null)
         {
-            freeCityBuildingSlots.Add(i);
-        }
-        for (int i = 0; i < MapModifier.Instance.resourcesSlots[cityID].Count; i++)
-        {
-            freeCityResourceSlots.Add(i);
+            cityID = MapModifier.Instance.GetCityID();
+
+            for (int i = 0; i < MapModifier.Instance.citiesSlots[cityID].Count; i++)
+            {
+                freeCityBuildingSlots.Add(i);
+            }
+            for (int i = 0; i < MapModifier.Instance.resourcesSlots[cityID].Count; i++)
+            {
+                freeCityResourceSlots.Add(i);
+            }
         }
     }
 
@@ -157,7 +161,6 @@ public class City : CardLocation
     }
     public bool CanPlay(ActionCard card)
     {
-        return true;
 
         if (card == null || card.data == null)
         {
@@ -220,12 +223,12 @@ public class City : CardLocation
         manager.discards[card.data.age - 1].Add(card);
         return true;
     }
-    public void BuildMarvel(ActionCard card)
+    public bool BuildMarvel(ActionCard card)
     {
         // the card is turned into a building
         // ...
 
-        //return false;
+        return false;
     }
 
     override public void Add(ActionCard card)
@@ -253,6 +256,10 @@ public class City : CardLocation
 
     void Build(ActionCard card)
     {
+        if(MapModifier.Instance == null)
+        {
+            return;
+        }
         // the card is turned into a building
         // ...
 

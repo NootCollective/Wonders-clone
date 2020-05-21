@@ -10,7 +10,8 @@ public enum CardType
     Civic, // [mistranslated as "civilian" in the game rules]): all grant a fixed number of victory points.
     MaterialRaw, //Brown cards (raw materials) provide one or two of the four raw material resources used in the game (wood, ore, clay brick, and stone).
     ManufacturedGood, //Grey cards (manufactured goods) provide one of the three manufactured goods used in the game (glass, papyrus, and textiles).
-    Guild //Purple cards (guilds) generally grant victory points based on the structures a player and/or his neighbors have built.
+    Guild, //Purple cards (guilds) generally grant victory points based on the structures a player and/or his neighbors have built.
+    Marvel
 }
 
 [CreateAssetMenu(fileName = "CardData", menuName = "Data/Card", order = 2)]

@@ -10,17 +10,21 @@ public class PlayerController : MonoBehaviour
     public ActionCard hovered;
 
     public bool AI = false;
-  
+    public int option = 0;
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main; 
+        camera = Camera.main;
     }
 
-    
+    public void SetOption(int option)
+    {
+        this.option = option;
+    }
+
     void OnGUI()
     {
-        
+
         GUI.Label(new Rect(10, 50, 100, 20), "Gold=" + city.Money.ToString());
         int y = 0;
         city.ComputeOwnResources();
@@ -45,23 +49,37 @@ public class PlayerController : MonoBehaviour
 
             if (hovered != null)
             {
-                
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (!city.hand.Contains(hovered))
                     {
                         Debug.LogWarning("This is not your hand");
                     }
-                    else if (TryPlay(hovered)){
-                        Debug.Log("you can play this card");
-                        manager.EndTurn();
-                    }
                     else
                     {
-
-                        Debug.Log("you CANNOT play this card: discarding");
-                        city.Discard(hovered);
-                        manager.EndTurn();
+                        if (option == 0)
+                        {
+                            if (TryPlay(hovered))
+                            {
+                                Debug.Log("you can play this card");
+                                manager.EndTurn();
+                            }
+                        }
+                        else if (option == 1)
+                        {
+                            Debug.Log("Marvel");
+                            if (city.BuildMarvel(hovered))
+                            {
+                                manager.EndTurn();
+                            }
+                        }
+                        if (option == 2)
+                        {
+                            Debug.Log("Discarding");
+                            city.Discard(hovered);
+                            manager.EndTurn();
+                        }
                     }
                 }
             }
@@ -86,10 +104,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+
     public void DoPlay()
     {
-        foreach(var card in city.hand.cards)
+        foreach (var card in city.hand.cards)
         {
             if (TryPlay(card))
             {

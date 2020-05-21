@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f44cb14c0311734387b63ecf7e89e6c, type: 3}
-  m_Name: 3.Haven - rule 1
+  m_Name: 3.Chamber of Commerce - rule 1
   m_EditorClassIdentifier: 
   ruleMoment: 0
   countLMR: 000100
-  countAndProduce: 1
-  toCount: 04000000
-  multiplier: 1
+  countAndProduce: 0
+  toCount: 05000000
+  multiplier: 2
   toGain: 7
   discountOnPayment: 0
   discountedItems: 

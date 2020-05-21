@@ -231,6 +231,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   hovered: {fileID: 0}
   AI: 1
+  option: 0
 --- !u!1 &5436953919627080635
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +383,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   hovered: {fileID: 0}
   AI: 1
+  option: 0
 --- !u!1 &5436953919698779725
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,6 +434,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   hovered: {fileID: 0}
   AI: 1
+  option: 0
 --- !u!1 &5436953919711012025
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,6 +530,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   hovered: {fileID: 0}
   AI: 1
+  option: 0
 --- !u!1 &5436953919726177012
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,6 +759,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   hovered: {fileID: 0}
   AI: 1
+  option: 0
 --- !u!1 &5436953920479939790
 GameObject:
   m_ObjectHideFlags: 0
@@ -806,6 +811,7 @@ MonoBehaviour:
   camera: {fileID: 0}
   hovered: {fileID: 0}
   AI: 0
+  option: 0
 --- !u!1 &5436953920574676758
 GameObject:
   m_ObjectHideFlags: 0

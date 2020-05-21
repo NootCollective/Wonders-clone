@@ -15,7 +15,7 @@ public class CardRuleData : ScriptableObject
 
     [Header("Special Production")]
     public bool countAndProduce;
-    public ResourceType[] toCount;
+    public CardType[] toCount;
     public int multiplier = 1;
     public ResourceType toGain = ResourceType.Money;
 

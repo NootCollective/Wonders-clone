@@ -17,7 +17,8 @@ public enum ResourceType
     ScienceStone, //10
     ScienceGear, //11
     MilitaryShield,//12
-    RESOURCE_COUNT = 13
+    Marvel, //13
+    RESOURCE_COUNT = 14
 }
 
 

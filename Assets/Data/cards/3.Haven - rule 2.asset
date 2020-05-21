@@ -15,7 +15,7 @@ MonoBehaviour:
   ruleMoment: 4
   countLMR: 000100
   countAndProduce: 1
-  toCount: 01000000000000000200000003000000
+  toCount: 04000000
   multiplier: 1
   toGain: 8
   discountOnPayment: 0

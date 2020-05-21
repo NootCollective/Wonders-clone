@@ -176,7 +176,6 @@ public class CardManager : MonoBehaviour
         int p = 0;
         for (int idx = (players*7) - 1; idx >= 0; --idx)
         {
-            Debug.Log(idx + " " + deck.Count);
             deck.MoveTo(idx, world.cities[p].hand);
             p = (p + 1) % players;
         }
