@@ -24,9 +24,10 @@ public class DeckData : ScriptableObject
         }
     }
 
-    CardData.OptionResource ParseProduction(string productionDescriptor)
+    OptionResource ParseProduction(string productionDescriptor)
     {
-        CardData.OptionResource production = new CardData.OptionResource();
+        OptionResource production = new OptionResource();
+        production.contentAsList = new ResourceList();
         production.content = new List<ResourceType>();
         for (int c = 0; c < productionDescriptor.Length; ++c)
         {
@@ -36,51 +37,59 @@ public class DeckData : ScriptableObject
             }
             else if (productionDescriptor[c] == 'W')
             {
+                production.contentAsList.Add(ResourceType.Wood);
                 production.content.Add(ResourceType.Wood);
             }
             else if (productionDescriptor[c] == 'S')
             {
                 production.content.Add(ResourceType.Stone);
-            }
-            else if (productionDescriptor[c] == 'S')
-            {
-                production.content.Add(ResourceType.Stone);
+                production.contentAsList.Add(ResourceType.Stone);
             }
             else if (productionDescriptor[c] == 'C')
             {
                 production.content.Add(ResourceType.Clay);
+                production.contentAsList.Add(ResourceType.Clay);
             }
             else if (productionDescriptor[c] == 'O')
             {
                 production.content.Add(ResourceType.Ore);
+                production.contentAsList.Add(ResourceType.Ore);
             }
             else if (productionDescriptor[c] == 'G')
             {
                 production.content.Add(ResourceType.Glass);
+                production.contentAsList.Add(ResourceType.Glass);
             }
             else if (productionDescriptor[c] == 'L')
             {
                 production.content.Add(ResourceType.Textile);
-            }
-            else if (productionDescriptor[c] == '&')
-            {
-                production.content.Add(ResourceType.ScienceCompas);
-            }
-            else if (productionDescriptor[c] == '@')
-            {
-                production.content.Add(ResourceType.ScienceGear);
-            }
-            else if (productionDescriptor[c] == '#')
-            {
-                production.content.Add(ResourceType.ScienceStone);
+                production.contentAsList.Add(ResourceType.Textile);
             }
             else if (productionDescriptor[c] == 'P')
             {
                 production.content.Add(ResourceType.Paper);
+                production.contentAsList.Add(ResourceType.Paper);
+            }
+            else if (productionDescriptor[c] == '&')
+            {
+                production.content.Add(ResourceType.ScienceCompas);
+                production.contentAsList.Add(ResourceType.ScienceCompas);
+            }
+            else if (productionDescriptor[c] == '@')
+            {
+                production.content.Add(ResourceType.ScienceGear);
+                production.contentAsList.Add(ResourceType.ScienceGear);
+            }
+            else if (productionDescriptor[c] == '#')
+            {
+                production.content.Add(ResourceType.ScienceStone);
+                production.contentAsList.Add(ResourceType.ScienceStone);
+
             }
             else if (productionDescriptor[c] == 'X')
             {
                 production.content.Add(ResourceType.MilitaryShield);
+                production.contentAsList.Add(ResourceType.MilitaryShield);
             }
             else if (productionDescriptor[c] == '{')
             {
@@ -90,10 +99,11 @@ public class DeckData : ScriptableObject
                     for (int m = 0; m < points; ++m)
                     {
                         production.content.Add(ResourceType.Point);
+                        production.contentAsList.Add(ResourceType.Point);
                     }
                     c += 2;
                 }
-                catch (System.Exception e)
+                catch (System.Exception)
                 {
                     Debug.LogError("  Bad resource at '" + productionDescriptor + "'[" + c + "]" + productionDescriptor[c] + productionDescriptor[c + 1] + productionDescriptor[c + 2]);
                     production = null;
@@ -108,9 +118,10 @@ public class DeckData : ScriptableObject
                     for (int m = 0; m < money; ++m)
                     {
                         production.content.Add(ResourceType.Money);
+                        production.contentAsList.Add(ResourceType.Money);
                     }
                 }
-                catch (System.Exception e)
+                catch (System.Exception )
                 {
                     Debug.LogError("  Bad resource" + productionDescriptor[c]);
                     production.content.Clear();
@@ -149,7 +160,7 @@ public class DeckData : ScriptableObject
                         data[asset.name] = lines[l];
                     }
                 }
-                catch (System.Exception e)
+                catch (System.Exception)
                 {
                     Debug.LogWarning("Bad card description at " + l);
                 }
@@ -253,7 +264,7 @@ public class DeckData : ScriptableObject
                                     cost.Add(ResourceType.Money);
                                 }
                             }
-                            catch (System.Exception e)
+                            catch (System.Exception )
                             {
                                 Debug.LogError("Bad resource" + costDescriptor[c]);
                             }
@@ -269,7 +280,7 @@ public class DeckData : ScriptableObject
                     {
                         card.chainRequirement = index[cardData[2]];
                     }
-                    catch (System.Exception e)
+                    catch (System.Exception )
                     {
                         Debug.LogError("no indexed card with the name " + cardData[2]);
                     }
@@ -287,7 +298,7 @@ public class DeckData : ScriptableObject
                         {
                             card.chainProvides[0] = index[cardData[6]];
                         }
-                        catch (System.Exception e)
+                        catch (System.Exception )
                         {
                             Debug.LogError("no indexed card with the name " + cardData[6]);
                         }
@@ -295,7 +306,7 @@ public class DeckData : ScriptableObject
                         {
                             card.chainProvides[1] = index[cardData[7]];
                         }
-                        catch (System.Exception e)
+                        catch (System.Exception )
                         {
                             Debug.LogError("no indexed card with the name " + cardData[7]);
                         }
@@ -307,7 +318,7 @@ public class DeckData : ScriptableObject
                         {
                             card.chainProvides[0] = index[cardData[6]];
                         }
-                        catch (System.Exception e)
+                        catch (System.Exception )
                         {
                             Debug.LogError("no indexed card with the name " + cardData[6]);
                         }
@@ -323,7 +334,7 @@ public class DeckData : ScriptableObject
                         string[] options = productionDescriptor.Split('/');
                         try
                         {
-                            card.production = new CardData.OptionResource[options.Length];
+                            card.production = new OptionResource[options.Length];
                             for(int p = 0; p < options.Length; ++p)
                             {
                                 var production = ParseProduction(options[p]);
@@ -331,15 +342,15 @@ public class DeckData : ScriptableObject
                             }
                             
                         }
-                        catch(System.Exception e)
+                        catch(System.Exception )
                         {
                             Debug.LogError("Bad options " + productionDescriptor);
-                            card.production = new CardData.OptionResource[0];
+                            card.production = new OptionResource[0];
                         }
                     }
                     else
                     {
-                        card.production = new CardData.OptionResource[1];
+                        card.production = new OptionResource[1];
                         card.production[0] = ParseProduction(productionDescriptor);
                     }
 

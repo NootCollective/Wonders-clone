@@ -23,4 +23,4 @@ MonoBehaviour:
   chainRequirement: {fileID: 0}
   chainProvides: []
   production: []
-  points: 0
+  instantEffect: []

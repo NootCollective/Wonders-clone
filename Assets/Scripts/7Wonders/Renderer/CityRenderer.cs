@@ -27,7 +27,7 @@ public class CityRenderer : CustomRenderer
        // }
     }
 
-    void Redraw()
+    override public void Redraw()
     {
         data = city.data;
         if (!data)

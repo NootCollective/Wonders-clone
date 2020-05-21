@@ -12,6 +12,9 @@ public class ActionCard : MonoBehaviour, IEquatable<ActionCard>
     static int MAXID = 0;
     public int ID = ++MAXID;
 
+    public Cost cost;
+    public Production _production;
+
     [SerializeField] bool visible = true;
     public bool Visible
     {
@@ -25,25 +28,17 @@ public class ActionCard : MonoBehaviour, IEquatable<ActionCard>
             return visible;
         }
     }
-    public Dictionary<ResourceType, int> cost;
-
+  
     public void Initialize()
     {
         ComputeCost();
     }
     public void ComputeCost()
 {
-        cost = new Dictionary<ResourceType, int>();
+        cost = new Cost();
         foreach (var c in data.cost)
         {
-            if (!cost.ContainsKey(c))
-            {
-                cost[c] = 1;
-            }
-            else
-            {
-                ++cost[c];
-            }
+            cost.Add(c);
         }
     }
     public override bool Equals(object obj)

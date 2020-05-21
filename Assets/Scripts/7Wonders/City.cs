@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class City : CardLocation
 {
+    public CardManager manager;
     public PlayerController player;
     public CityData data;
     public int Money;
@@ -87,6 +88,33 @@ public class City : CardLocation
         }
     }
 
+    public bool ResolvePaymentOptions(ResourceType[] cost)
+    {
+       /* if (card.data.cost.Length == 0)
+        {
+            return true;
+        }
+        else
+        {
+            ComputeOwnResources();
+
+            foreach (var c in card.cost.Keys)
+            {
+                List<ResourceType> missing = new List<ResourceType>();
+                int costID = resourceID(c);
+                if (!resources.ContainsKey(costID))
+                {
+                    missing.add
+                }
+                else if (resources[costID] < card.cost[c])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }*/
+        return false;
+    }
     public bool CanPayWithOwnResources(ActionCard card)
     {
         if (card.data.cost.Length == 0)
@@ -97,7 +125,7 @@ public class City : CardLocation
         {
             ComputeOwnResources();
 
-            foreach (var c in card.cost.Keys)
+            foreach (var c in card.cost)
             {
                 int costID = resourceID(c);
                 if (!resources.ContainsKey(costID)
@@ -133,7 +161,7 @@ public class City : CardLocation
     }
     public void Pay(ActionCard card)
     {
-        if (card.cost.ContainsKey(ResourceType.Money))
+        if (card.cost[ResourceType.Money]>0)
         {
             this.Money -= card.cost[ResourceType.Money];
         }
@@ -141,10 +169,12 @@ public class City : CardLocation
     public bool Resolve(ActionCard card)
     {
         Debug.Log("No resolution done for now");
-        /*if (card)
+        if (card && card.data && card.data.production.Length>0 && card.data.production[0]!=null && card.data.production[0].contentAsList[ResourceType.Money]>0)
         {
-            Money += card.production.money;
-        }*/
+            Money += card.data.production[0].contentAsList[ResourceType.Money];
+
+            return true;
+        }
         return false;
     }
     public bool Play(ActionCard card)
@@ -156,8 +186,26 @@ public class City : CardLocation
             hand.cards.Remove(card);
             Add(card);
 
+            Build(card);
+
+            return true;
         }
         return false;
+    }
+
+    public bool Discard(ActionCard card)
+    {
+        hand.Extract(card);
+        Money += 3;
+        manager.discards[card.data.age - 1].Add(card);
+        return true;
+    }
+    public void BuildMarvel(ActionCard card)
+    {
+        // the card is turned into a building
+        // ...
+
+        //return false;
     }
 
     override public void Add(ActionCard card)
@@ -181,5 +229,30 @@ public class City : CardLocation
         }
         //card.transform.localScale = new Vector3(0.5f, 0.5f, 1);
         card.Visible = true;
+    }
+
+    void Build(ActionCard card)
+    {
+        // the card is turned into a building
+        // ...
+
+        if (card.data.type == CardType.MaterialRaw)
+        {
+            foreach (var resource in card.data.production[0].contentAsList)
+            {
+                // this produces resource;
+                // you can take the first one
+            }
+        }
+        else if (card.data.type == CardType.ManufacturedGood)
+        {
+            foreach (var resource in card.data.production[0].contentAsList)
+            {
+                // this produces resource;
+                // you can take the first one
+            }
+        }
+
+        //...
     }
 }

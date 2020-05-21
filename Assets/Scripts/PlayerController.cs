@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public CardManager manager;
     public City city;
-    public Camera camera;
+    new public Camera camera;
     public ActionCard hovered;
 
     public bool AI = false;
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
                     {
 
                         Debug.Log("you CANNOT play this card: discarding");
-                        Discard(hovered);
+                        city.Discard(hovered);
                         manager.EndTurn();
                     }
                 }
@@ -86,15 +86,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Discard(ActionCard card)
-    {
-        city.hand.Extract(card);
-        manager.discards[card.data.age-1].Add(card);  
-    }
-    void BuildMarvel(ActionCard card)
-    {
-
-    }
+    
     public void DoPlay()
     {
         foreach(var card in city.hand.cards)
@@ -104,6 +96,6 @@ public class PlayerController : MonoBehaviour
                 return;
             }
         }
-        Discard(city.hand.ExtractAt(0));
+        city.Discard(city.hand.ExtractAt(0));
     }
 }

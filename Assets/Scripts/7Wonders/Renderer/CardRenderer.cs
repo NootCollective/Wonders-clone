@@ -28,7 +28,7 @@ public class CardRenderer : CustomRenderer
         Redraw();
     }
 
-    public void Redraw()
+    override public void Redraw()
     {
         if(actionCard == null)
         {

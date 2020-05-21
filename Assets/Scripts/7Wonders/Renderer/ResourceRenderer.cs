@@ -7,10 +7,10 @@ public class ResourceRenderer : CustomRenderer
     [SerializeField] ResourceType resource;
     [SerializeField] int amount = 1;
     [Header("Links")]
-    [SerializeField] SpriteRenderer icon;
-    [SerializeField] SpriteRenderer border;
-    [SerializeField] SpriteRenderer background;
-    [SerializeField] TextMesh amountDisplay;
+    [SerializeField] SpriteRenderer icon = null;
+    [SerializeField] SpriteRenderer border = null;
+    [SerializeField] SpriteRenderer background = null;
+    [SerializeField] TextMesh amountDisplay = null;
 
     public Sprite[] icons;
     // Start is called before the first frame update
