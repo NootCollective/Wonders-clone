@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Chamber of Co
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 1
+  ID: 54
+  cardColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   age: 3
-  copies: 0
-  cost: 
+  copies: 2
+  cost: 030000000300000005000000
   chainRequirement: {fileID: 0}
   chainProvides: []
-  production: []
+  production:
+  - content: 
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

@@ -14,13 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Laboratory
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 2
+  ID: 44
+  cardColor: {r: 0, g: 1, b: 0, a: 1}
   age: 2
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
-  chainProvides: []
-  production: []
+  copies: 2
+  cost: 030000000300000005000000
+  chainRequirement: {fileID: 11400000, guid: fbda4b66fdd63b048b888084be531ef0, type: 2}
+  chainProvides:
+  - {fileID: 11400000, guid: faae123df7bba474f8891fcbaf5c334b, type: 2}
+  - {fileID: 11400000, guid: 5cf9af1570791154bab88f8e0dde3476, type: 2}
+  production:
+  - content: 0b000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

@@ -14,13 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Ship-owners
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 6
+  ID: 71
+  cardColor: {r: 0.5803922, g: 0, b: 0.827451, a: 1}
   age: 3
-  copies: 0
-  cost: 
+  copies: 1
+  cost: 0000000000000000000000000500000004000000
   chainRequirement: {fileID: 0}
   chainProvides: []
-  production: []
+  production:
+  - content: 
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  - content: 
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  - content: 
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

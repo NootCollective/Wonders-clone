@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: University
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 2
+  ID: 62
+  cardColor: {r: 0, g: 1, b: 0, a: 1}
   age: 3
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
+  copies: 2
+  cost: 00000000000000000500000004000000
+  chainRequirement: {fileID: 11400000, guid: 819f4baffe9745b45aa2f04d40af4513, type: 2}
   chainProvides: []
-  production: []
+  production:
+  - content: 0a000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

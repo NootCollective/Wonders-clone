@@ -14,13 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Temple
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 3
+  ID: 32
+  cardColor: {r: 0, g: 0, b: 1, a: 1}
   age: 2
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
-  chainProvides: []
-  production: []
+  copies: 2
+  cost: 000000000300000004000000
+  chainRequirement: {fileID: 11400000, guid: 66a7d78278537794381d302948538ab0, type: 2}
+  chainProvides:
+  - {fileID: 11400000, guid: 1306eca5f79b1b6408ba4a18f87868bb, type: 2}
+  production:
+  - content: 080000000800000008000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

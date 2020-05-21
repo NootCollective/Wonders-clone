@@ -14,13 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Excavation
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 4
+  ID: 5
+  cardColor: {r: 0.5, g: 0, b: 0, a: 1}
   age: 1
-  copies: 0
-  cost: 
+  copies: 1
+  cost: 07000000
   chainRequirement: {fileID: 0}
   chainProvides: []
-  production: []
+  production:
+  - content: 01000000
+    contentAsList:
+      content: 00000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  - content: 03000000
+    contentAsList:
+      content: 00000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

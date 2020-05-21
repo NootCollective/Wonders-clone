@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Lodge
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 2
+  ID: 60
+  cardColor: {r: 0, g: 1, b: 0, a: 1}
   age: 3
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
+  copies: 2
+  cost: 03000000030000000600000005000000
+  chainRequirement: {fileID: 11400000, guid: a01a002a5841c7c4ebf42f04b648c969, type: 2}
   chainProvides: []
-  production: []
+  production:
+  - content: 09000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

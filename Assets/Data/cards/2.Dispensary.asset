@@ -14,13 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Dispensary
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 2
+  ID: 43
+  cardColor: {r: 0, g: 1, b: 0, a: 1}
   age: 2
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
-  chainProvides: []
-  production: []
+  copies: 2
+  cost: 020000000200000004000000
+  chainRequirement: {fileID: 11400000, guid: 1040674283d9d674889a5d48965eb4dc, type: 2}
+  chainProvides:
+  - {fileID: 11400000, guid: b748783a6a778eb40882436f6109b45c, type: 2}
+  - {fileID: 11400000, guid: 469bc096e391d1b43bc231e0564bfedb, type: 2}
+  production:
+  - content: 09000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

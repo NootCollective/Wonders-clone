@@ -15,12 +15,16 @@ MonoBehaviour:
   name: Archery Range
   description: 
   type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  ID: 42
+  cardColor: {r: 1, g: 0, b: 0, a: 1}
   age: 2
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
+  copies: 2
+  cost: 000000000000000002000000
+  chainRequirement: {fileID: 11400000, guid: fbda4b66fdd63b048b888084be531ef0, type: 2}
   chainProvides: []
-  production: []
+  production:
+  - content: 0c0000000c000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

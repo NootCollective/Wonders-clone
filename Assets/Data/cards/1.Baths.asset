@@ -14,13 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Baths
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 3
+  ID: 14
+  cardColor: {r: 0, g: 0, b: 1, a: 1}
   age: 1
-  copies: 0
-  cost: 
+  copies: 2
+  cost: 01000000
   chainRequirement: {fileID: 0}
-  chainProvides: []
-  production: []
+  chainProvides:
+  - {fileID: 11400000, guid: fb800709ead77464482960e525b720a5, type: 2}
+  production:
+  - content: 080000000800000008000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

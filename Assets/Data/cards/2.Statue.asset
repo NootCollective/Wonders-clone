@@ -14,13 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Statue
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 3
+  ID: 33
+  cardColor: {r: 0, g: 0, b: 1, a: 1}
   age: 2
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
-  chainProvides: []
-  production: []
+  copies: 2
+  cost: 000000000200000002000000
+  chainRequirement: {fileID: 11400000, guid: 28b46f4a0240744418de52336acf362e, type: 2}
+  chainProvides:
+  - {fileID: 11400000, guid: d259912767f374141868f312823a938a, type: 2}
+  production:
+  - content: 08000000080000000800000008000000
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}

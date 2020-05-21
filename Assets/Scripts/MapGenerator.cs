@@ -80,6 +80,7 @@ public class MapGenerator : MonoBehaviour
         // cities centers
         //citiesCenters = new Vector3Int[6];
         int generatedCities = citiesCenters.Length;
+        float scale = transform.localScale.x;
         tilemap.SetTile(new Vector3Int(0, 0, 0), waterTile);
         for (int i = 0; i < citiesCenters.Length; i++)
         {

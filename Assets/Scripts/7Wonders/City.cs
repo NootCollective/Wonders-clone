@@ -157,6 +157,8 @@ public class City : CardLocation
     }
     public bool CanPlay(ActionCard card)
     {
+        return true;
+
         if (card == null || card.data == null)
         {
             Debug.LogError("invalid card:" + (card != null ? card.name : "no card"));
@@ -266,7 +268,7 @@ public class City : CardLocation
             freeCityResourceSlots.Remove(slotIndex);
             MapModifier.Instance.PlaceBuilding(card.data.buildingTile, MapModifier.Instance.resourcesSlots[cityID][slotIndex]);
         }
-        else if (card.data.type == CardType.ManufacturedGood)
+        else
         {
             foreach (var resource in card.data.production[0].contentAsList)
             {

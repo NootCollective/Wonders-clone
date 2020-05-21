@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Lighthouse
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 1
+  ID: 53
+  cardColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   age: 3
-  copies: 0
-  cost: 
-  chainRequirement: {fileID: 0}
+  copies: 2
+  cost: 0400000001000000
+  chainRequirement: {fileID: 11400000, guid: 56bc09ee85ab2f54284b5d8990232260, type: 2}
   chainProvides: []
-  production: []
+  production:
+  - content: 
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   instantEffect: []
+  buildingTile: {fileID: 11400000, guid: 0a44014b4cf1b8945aa1f2a937bfb594, type: 2}
