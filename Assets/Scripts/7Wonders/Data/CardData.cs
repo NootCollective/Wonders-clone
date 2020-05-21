@@ -49,6 +49,9 @@ public class CardData : ScriptableObject
     [Header("Additional rules")]
     public CardRuleData[] instantEffect;
 
+    [Header("Map related links")]
+    public BuildingTile buildingTile;
+
     private void OnValidate()
     {
         Verify();

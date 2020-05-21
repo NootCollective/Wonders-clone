@@ -164,4 +164,11 @@ public class MapModifier : MonoBehaviour
 
         return resources;
     }
+
+    private int lastAtributedID = -1;
+    public int GetCityID()
+    {
+        lastAtributedID++;
+        return lastAtributedID;
+    }
 }

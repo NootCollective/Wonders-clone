@@ -15,7 +15,25 @@ public class City : CardLocation
 
     public Dictionary<int, int> resources;
 
+    public int cityID = -1;
+    public List<int> freeCityBuildingSlots = new List<int>();
+    public List<int> freeCityResourceSlots = new List<int>();
+
     public Transform construction;
+
+    private void Start()
+    {
+        cityID = MapModifier.Instance.GetCityID();
+        for(int i=0; i< MapModifier.Instance.citiesSlots[cityID].Count; i++)
+        {
+            freeCityBuildingSlots.Add(i);
+        }
+        for (int i = 0; i < MapModifier.Instance.resourcesSlots[cityID].Count; i++)
+        {
+            freeCityResourceSlots.Add(i);
+        }
+    }
+
     public int MilitaryStrength
     {
         get
@@ -243,6 +261,10 @@ public class City : CardLocation
                 // this produces resource;
                 // you can take the first one
             }
+
+            int slotIndex = freeCityResourceSlots[Random.Range(0, freeCityResourceSlots.Count)];
+            freeCityResourceSlots.Remove(slotIndex);
+            MapModifier.Instance.PlaceBuilding(card.data.buildingTile, MapModifier.Instance.resourcesSlots[cityID][slotIndex]);
         }
         else if (card.data.type == CardType.ManufacturedGood)
         {
@@ -251,6 +273,10 @@ public class City : CardLocation
                 // this produces resource;
                 // you can take the first one
             }
+
+            int slotIndex = freeCityBuildingSlots[0];
+            freeCityBuildingSlots.Remove(slotIndex);
+            MapModifier.Instance.PlaceBuilding(card.data.buildingTile, MapModifier.Instance.citiesSlots[cityID][slotIndex]);
         }
 
         //...

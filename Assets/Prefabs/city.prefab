@@ -258,6 +258,9 @@ MonoBehaviour:
   points: 0
   hand: {fileID: 0}
   neighbors: []
+  cityID: -1
+  freeCityBuildingSlots: 
+  freeCityResourceSlots: 
   construction: {fileID: 735347605909536947}
 --- !u!114 &3560810124414616971
 MonoBehaviour:
