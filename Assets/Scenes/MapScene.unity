@@ -314,23 +314,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7618290728232538756, guid: e5009781f3435d047bf2197c1dfcdf96,
         type: 3}
-      propertyPath: mapSize.m_Position.x
-      value: -200
-      objectReference: {fileID: 0}
-    - target: {fileID: 7618290728232538756, guid: e5009781f3435d047bf2197c1dfcdf96,
-        type: 3}
-      propertyPath: mapSize.m_Position.y
-      value: -200
-      objectReference: {fileID: 0}
-    - target: {fileID: 7618290728232538756, guid: e5009781f3435d047bf2197c1dfcdf96,
-        type: 3}
-      propertyPath: mapSize.m_Size.y
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 7618290728232538756, guid: e5009781f3435d047bf2197c1dfcdf96,
-        type: 3}
-      propertyPath: mapSize.m_Size.x
-      value: 400
+      propertyPath: cityRadius
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 7618290728232538759, guid: e5009781f3435d047bf2197c1dfcdf96,
         type: 3}
