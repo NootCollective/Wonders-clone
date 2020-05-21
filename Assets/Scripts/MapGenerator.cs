@@ -80,13 +80,12 @@ public class MapGenerator : MonoBehaviour
         // cities centers
         //citiesCenters = new Vector3Int[6];
         int generatedCities = citiesCenters.Length;
-        float scale = transform.localScale.x;
         tilemap.SetTile(new Vector3Int(0, 0, 0), waterTile);
         for (int i = 0; i < citiesCenters.Length; i++)
         {
             float angle = 60 * i * Mathf.Deg2Rad;
             Vector3 p1 = new Vector3(citiesDistances * Mathf.Cos(angle), citiesDistances * Mathf.Sin(angle), 0);
-            citiesCenters[i] = new Vector3Int((int)p1.x, (int)p1.y, (int)p1.z);
+            citiesCenters[i] = tilemap.LocalToCell(p1);// new Vector3Int((int)p1.x, (int)p1.y, (int)p1.z);
         }
 
         // forest
@@ -96,8 +95,8 @@ public class MapGenerator : MonoBehaviour
 
             foreach (Vector3Int cell in cityBound.allPositionsWithin)
             {
-                Vector3 p2 = tilemap.CellToWorld(cell);
-                float r = Vector3.Distance(citiesCenters[i], p2);
+                Vector3 p2 = tilemap.CellToLocal(cell);
+                float r = Vector3.Distance(tilemap.CellToLocal(citiesCenters[i]), p2);
 
                 if (r < cityRadius && RandomForest(r / cityRadius) > forestThreshold)
                 {
