@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CityData : MonoBehaviour
+[CreateAssetMenu(fileName = "CityData", menuName = "Data/City", order = 2)]
+public class CityData : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    new public string name;
+    public Color color;
+    public bool side = false;
+    public ResourceType production;
+    public CardData[] marvel;
 }

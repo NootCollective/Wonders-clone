@@ -161,6 +161,14 @@ public class DeckData : ScriptableObject
                 string[] cardData = data[cardname].Split(fieldSeperator);
                 CardData card = index[cardname];
 
+                //TODO: take into account amount of players
+                bool hasCopies = int.TryParse(cardData[12], out card.copies);
+                if (!hasCopies)
+                {
+                    Debug.LogWarning("No copy information");
+                    card.copies = 1;
+                }
+
                 card.ID = id++;
                 #region type
                 if (cardData[1] == "brown")

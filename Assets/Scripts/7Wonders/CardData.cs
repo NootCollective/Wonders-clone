@@ -36,13 +36,15 @@ public class CardData : ScriptableObject
    };
 
 
-
-    public int ID;
     new public string name;
     public string description;
     public CardType type;
+
+    [Header("Metadata")]
+    public int ID;
     public Color cardColor;
     public int age;
+    public int copies;
 
     [Header("Cost")]
     public ResourceType[] cost;

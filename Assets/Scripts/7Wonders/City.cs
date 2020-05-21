@@ -2,90 +2,184 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class City : MonoBehaviour
+public class City : CardLocation
 {
+    public PlayerController player;
+    public CityData data;
     public int Money;
     public int points;
 
-    public List<ActionCard> options;
+    public LocationHand hand;
     public List<City> neighbors;
 
-    public List<ActionCard> played;
+    public Dictionary<int, int> resources;
 
-    public bool ContainsCard(CardData other)
+    public Transform construction;
+    public int MilitaryStrength
     {
-        foreach (var card in played)
+        get
         {
-            if (card.data == other)
+            ComputeOwnResources();
+            int mID = resourceID(ResourceType.MilitaryShield);
+            if (resources.ContainsKey(mID))
             {
-                return true;
+                return resources[mID];
+            }
+            else
+            {
+                return 0;
             }
         }
-        return false;
     }
-    public bool ContainsCard(ActionCard other)
+    public int resourceID(ResourceType resource)
     {
-        return ContainsCard(other.data);
+        return 2 << (int)resource;
     }
-    void OnGUI()
+    public void ComputeOwnResources()
     {
-        Dictionary<ResourceType, int> count = new Dictionary<ResourceType, int>();
-        foreach(var card in played)
+        if (resources != null)
         {
-            foreach(var op in card.data.production)
+            resources.Clear();
+        }
+        else
+        {
+            resources = new Dictionary<int, int>();
+        }
+        resources[resourceID(data.production)] = 1;
+        resources[resourceID(ResourceType.Money)] = 1;
+        foreach (var card in cards)
+        {
+            if (card.data.production.Length == 1)
             {
-                foreach(var resource in op.content)
+                var option = card.data.production[0];
+                foreach (var resource in option.content)
                 {
-                    if (!count.ContainsKey(resource))
+                    int resourceId = resourceID(resource);
+                    if (!resources.ContainsKey(resourceId))
                     {
-                        count[resource] = 1;
+                        resources[resourceId] = 1;
                     }
                     else
                     {
-                        ++count[resource];
+                        ++resources[resourceId];
+                    }
+                }
+            }
+            else
+            {
+                int resourceId = 0;
+                foreach (var option in card.data.production)
+                {
+                    foreach (var resource in option.content)
+                    {
+                        resourceId += 2 << (int)resource;
+                    }
+                    if (!resources.ContainsKey(resourceId))
+                    {
+                        resources[resourceId] = 1;
+                    }
+                    else
+                    {
+                        ++resources[resourceId];
                     }
                 }
             }
         }
-        int y = 0;
-        foreach( var resource in count.Keys)
-        {
-            GUI.Label(new Rect(10, 10+y*20, 100, 20), resource.ToString()+"="+count[resource]);
-            ++y;
-        }
     }
-    public bool CanPlay(ActionCard card)
+
+    public bool CanPayWithOwnResources(ActionCard card)
     {
-        if (ContainsCard(card))
-        {
-            return false;
-        }
         if (card.data.cost.Length == 0)
         {
             return true;
         }
-        else if (card.data.chainRequirement != null && ContainsCard(card.data.chainRequirement))
+        else
+        {
+            ComputeOwnResources();
+
+            foreach (var c in card.cost.Keys)
+            {
+                int costID = resourceID(c);
+                if (!resources.ContainsKey(costID)
+                    || resources[costID] < card.cost[c])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    public bool CanPlay(ActionCard card)
+    {
+        if (card == null || card.data == null)
+        {
+            Debug.LogError("invalid card:" + (card != null ? card.name : "no card"));
+            return false;
+        }
+        else if (ContainsInstance(card.data))
+        {
+            return false;
+        }
+        else if (CanPayWithOwnResources(card))
+        {
+            return true;
+        }
+        else if (card.data.chainRequirement != null && ContainsInstance(card.data.chainRequirement))
         {
             return true;
         }
         return false;
 
     }
+    public void Pay(ActionCard card)
+    {
+        if (card.cost.ContainsKey(ResourceType.Money))
+        {
+            this.Money -= card.cost[ResourceType.Money];
+        }
+    }
     public bool Resolve(ActionCard card)
     {
         Debug.Log("No resolution done for now");
+        /*if (card)
+        {
+            Money += card.production.money;
+        }*/
         return false;
     }
     public bool Play(ActionCard card)
     {
         if (CanPlay(card))
         {
+            Pay(card);
             Resolve(card);
-            played.Add(card);
-            card.transform.parent = this.transform;
-            card.transform.localPosition = new Vector3((played.Count - 1)*3, 1, 0);
-            card.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+            hand.cards.Remove(card);
+            Add(card);
+
         }
         return false;
+    }
+
+    override public void Add(ActionCard card)
+    {
+        base.Add(card);
+        card.transform.parent = construction;
+        bool placed = false;
+        if (card.data.chainRequirement != null)
+        {
+            var chain = GetInstance(card.data.chainRequirement);
+            if (chain)
+            {
+                card.transform.localPosition = chain.transform.localPosition + new Vector3(1, -1.5f, 0);
+                placed = true;
+            }
+        }
+        if (!placed)
+        {
+
+            card.transform.localPosition = new Vector3((cards.Count - 3) * 5, 1, 0);
+        }
+        //card.transform.localScale = new Vector3(0.5f, 0.5f, 1);
+        card.Visible = true;
     }
 }

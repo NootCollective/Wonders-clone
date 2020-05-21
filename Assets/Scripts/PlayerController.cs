@@ -4,14 +4,31 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public City player;
+    public CardManager manager;
+    public City city;
     public Camera camera;
     public ActionCard hovered;
 
+    public bool AI = false;
+  
     // Start is called before the first frame update
     void Start()
     {
         camera = Camera.main; 
+    }
+
+    
+    void OnGUI()
+    {
+        
+        GUI.Label(new Rect(10, 50, 100, 20), "Gold=" + city.Money.ToString());
+        int y = 0;
+        city.ComputeOwnResources();
+        foreach (var resource in city.resources.Keys)
+        {
+            GUI.Label(new Rect(10, 70 + y * 20, 100, 20), resource.ToString() + "=" + city.resources[resource]);
+            ++y;
+        }
     }
 
     // Update is called once per frame
@@ -24,18 +41,27 @@ public class PlayerController : MonoBehaviour
         {
             Transform objectHit = hit.transform;
 
-            hovered = hit.transform.gameObject.GetComponent<ActionCard>();
+            hovered = objectHit.gameObject.GetComponent<ActionCard>();
 
-            if (hovered != null) {
+            if (hovered != null)
+            {
+                
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (player.CanPlay(hovered)){
+                    if (!city.hand.Contains(hovered))
+                    {
+                        Debug.LogWarning("This is not your hand");
+                    }
+                    else if (TryPlay(hovered)){
                         Debug.Log("you can play this card");
-                        player.Play(hovered);
+                        manager.EndTurn();
                     }
                     else
                     {
-                        Debug.Log("you CANNOT play this card");
+
+                        Debug.Log("you CANNOT play this card: discarding");
+                        Discard(hovered);
+                        manager.EndTurn();
                     }
                 }
             }
@@ -44,5 +70,40 @@ public class PlayerController : MonoBehaviour
         {
             hovered = null;
         }
+    }
+
+    bool TryPlay(ActionCard card)
+    {
+        if (city.CanPlay(card))
+        {
+            city.Play(card);
+            city.hand.cards.Remove(card);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void Discard(ActionCard card)
+    {
+        city.hand.Extract(card);
+        manager.discards[card.data.age-1].Add(card);  
+    }
+    void BuildMarvel(ActionCard card)
+    {
+
+    }
+    public void DoPlay()
+    {
+        foreach(var card in city.hand.cards)
+        {
+            if (TryPlay(card))
+            {
+                return;
+            }
+        }
+        Discard(city.hand.ExtractAt(0));
     }
 }

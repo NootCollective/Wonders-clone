@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21556c249fdf574cb9bbebf8e321969, type: 3}
   m_Name: 3.Lodge
   m_EditorClassIdentifier: 
-  ID: 0
   name: Lodge
   description: 
   type: 0
+  ID: 0
   cardColor: {r: 0, g: 0, b: 0, a: 0}
   age: 3
+  copies: 0
   cost: 
   chainRequirement: {fileID: 0}
   chainProvides: []
