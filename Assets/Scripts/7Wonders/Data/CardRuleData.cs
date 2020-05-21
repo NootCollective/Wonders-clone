@@ -7,14 +7,20 @@ public class CardRuleData : ScriptableObject
 {
     public enum RuleMoment
     {
-        OnPlay, EndOfTurn, EndOfAge, EndOfGame
+        OnPlay, OnBuy, EndOfTurn, EndOfAge, EndOfGame
     }
+
     public RuleMoment ruleMoment;
+    public bool[] countLMR = new bool[3];
 
     [Header("Special Production")]
-    public bool produceSpecial;
-    public bool[] countLMR = new bool[3];
+    public bool countAndProduce;
     public ResourceType[] toCount;
     public int multiplier = 1;
     public ResourceType toGain = ResourceType.Money;
+
+    [Header("Special Discount")]
+    public bool discountOnPayment;
+    public ResourceType[] discountedItems;
+
 }

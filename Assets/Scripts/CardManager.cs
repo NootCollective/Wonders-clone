@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
+    public int players = 7;
     public DeckData deck;
     public LocationDeck[] decks;
     public LocationDiscard[] discards;
@@ -75,7 +76,6 @@ public class CardManager : MonoBehaviour
     }
     void DoWar()
     {
-        int players = world.cities.Length;
         int[] shields = new int[players];
         for (int c = 0; c < players; ++c)
         {
@@ -88,7 +88,7 @@ public class CardManager : MonoBehaviour
                 int enemy = (c - 1) % players;
                 if (c == 0)
                 {
-                    enemy = 6;
+                    enemy = players-1;
                 }
                
                 int comparison = shields[enemy].CompareTo(shields[c]);
@@ -123,7 +123,6 @@ public class CardManager : MonoBehaviour
     }
     void PassCards(int direction = 1)
     {
-        int players = world.cities.Length;
         var handContents = new ActionCard[players][];
         for (int p = 0; p < players; ++p)
         {
@@ -159,7 +158,6 @@ public class CardManager : MonoBehaviour
         }
         if (guilds.Count > 0)
         {
-            int players = 7;
             for (int g = 0; g < players + 2; ++g)
             {
                 int idx = Random.Range(0, guilds.Count);
@@ -176,10 +174,14 @@ public class CardManager : MonoBehaviour
     void Distribute(LocationDeck deck)
     {
         int p = 0;
-        for (int idx = deck.cards.Count - 1; idx >= 0; --idx)
+        for (int idx = (players*7) - 1; idx >= 0; --idx)
         {
             deck.MoveTo(idx, world.cities[p].hand);
             p = (p + 1) % world.cities.Length;
+        }
+        for (int idx = deck.Count - 1; idx >= 0; --idx)
+        {
+            deck.MoveTo(idx, discards[age-1]);
         }
     }
 

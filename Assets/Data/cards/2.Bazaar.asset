@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Bazaar
   description: 
-  type: 0
-  ID: 0
-  cardColor: {r: 0, g: 0, b: 0, a: 0}
+  type: 1
+  ID: 38
+  cardColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   age: 2
-  copies: 0
+  copies: 2
   cost: 
   chainRequirement: {fileID: 0}
   chainProvides: []
-  production: []
-  instantEffect: []
+  production:
+  - content: 
+    contentAsList:
+      content: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  instantEffect:
+  - {fileID: 11400000, guid: 2ef4540fafb1f50429c5a274bd685757, type: 2}

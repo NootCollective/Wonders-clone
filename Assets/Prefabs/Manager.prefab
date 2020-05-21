@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f282980b94d4b344ca8db07eb395ed98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  players: 7
   deck: {fileID: 11400000, guid: 01dac817e2de73744ade1f9010b36a9b, type: 2}
   decks:
   - {fileID: 5436953920574676756}

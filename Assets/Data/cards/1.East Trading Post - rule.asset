@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f44cb14c0311734387b63ecf7e89e6c, type: 3}
+  m_Name: 1.East Trading Post - rule
+  m_EditorClassIdentifier: 
+  ruleMoment: 1
+  countLMR: 000001
+  countAndProduce: 0
+  toCount: 
+  multiplier: 1
+  toGain: 7
+  discountOnPayment: 1
+  discountedItems: 00000000010000000200000003000000

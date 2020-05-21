@@ -12,6 +12,7 @@ public class DeckData : ScriptableObject
     public List<CardData> age1;
     public List<CardData> age2;
     public List<CardData> age3;
+
     private char lineSeperater = '\n'; // It defines line seperate character
     private char fieldSeperator = ','; // It defines field seperate chracter
 
