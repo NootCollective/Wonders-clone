@@ -12,6 +12,13 @@ public class MapModifier : MonoBehaviour
     public List<Vector3Int>[] citiesSlots;
     public List<Vector3Int>[] resourcesSlots;
 
+    public static MapModifier Instance = null;
+    private void Awake()
+    {
+        if(Instance == null)
+            Instance = this;
+    }
+
     private void OnValidate()
     {
         if (grid)
@@ -80,13 +87,13 @@ public class MapModifier : MonoBehaviour
             resourcesSlots[i] = GetResourcesSlots(mapGen.citiesCenters[i]);
         }
 
-        for (int i = 0; i < 6; i++)
+        /*for (int i = 0; i < 6; i++)
         {
             foreach(Vector3Int v in citiesSlots[i])
                 PlaceBuilding(cityDebugTile, v);
             foreach (Vector3Int v in resourcesSlots[i])
                 PlaceBuilding(resourceDebugTile, v);
-        }
+        }*/
     }
 
 
