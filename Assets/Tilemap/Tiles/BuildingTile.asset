@@ -34,8 +34,8 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  centerTile: {fileID: 11400000, guid: caa5aad83baeca84a965d0626e9a696a, type: 2}
-  ring1Tile: {fileID: 11400000, guid: 5dd609083233a2e41adfeef3cfeddf24, type: 2}
+  centerTile: {fileID: 11400000, guid: ef69439c360a8fb41885fef2d9ada4a5, type: 2}
+  ring1Tile: {fileID: 11400000, guid: 4facd63d650df354f84237c97a04d2ad, type: 2}
   ring2Tile: {fileID: 11400000, guid: 22455560dd7513f43a075e3bd1babe6d, type: 2}
   ring1Probability: 1
   ring2Probability: 0
