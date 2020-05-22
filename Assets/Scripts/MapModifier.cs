@@ -40,15 +40,15 @@ public class MapModifier : MonoBehaviour
         {
             tilemap.SetTile(position, building.centerTile);
 
-            if (building.ring1Tile)
+            if (building.ring1Tile.Length != 0)
             {
                 var ring = HexagonalTile.GetHexagonalRing(position, 1);
                 foreach (Vector3Int t in ring)
                 {
                     if (Random.Range(0f, 1f) < building.ring1Probability)
                     {
-                        tilemap.SetTile(t, building.ring1Tile);
-                        if(Random.Range(0, 2) != 0)
+                        tilemap.SetTile(t, building.ring1Tile[Random.Range(0, building.ring1Tile.Length)]);
+                        if(building.flipAllowed && Random.Range(0, 2) != 0)
                         {
                             Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 180f, 0f), Vector3.one);
                             tilemap.SetTransformMatrix(t, matrix);
@@ -57,14 +57,19 @@ public class MapModifier : MonoBehaviour
                 }
             }
 
-            if (building.ring2Tile)
+            if (building.ring2Tile.Length != 0)
             {
                 var ring = HexagonalTile.GetHexagonalRing(position, 2);
                 foreach (Vector3Int t in ring)
                 {
                     if (Random.Range(0f, 1f) < building.ring2Probability)
                     {
-                        tilemap.SetTile(t, building.ring2Tile);
+                        tilemap.SetTile(t, building.ring2Tile[Random.Range(0, building.ring2Tile.Length)]);
+                        if (building.flipAllowed && Random.Range(0, 2) != 0)
+                        {
+                            Matrix4x4 matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, 180f, 0f), Vector3.one);
+                            tilemap.SetTransformMatrix(t, matrix);
+                        }
                     }
                 }
             }
